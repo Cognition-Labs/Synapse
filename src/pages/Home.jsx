@@ -1,22 +1,25 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
+import MainEditor from "../components/MainEditor"
+import FileTree from "../components/FileTree"
 
 const Home = () => {
     return (
         <>
             <Grid
-                templateAreas={'"folderbar editor suggestionbar"'}
+                templateAreas={'"panel folderbar editor suggestionbar"'}
                 gridTemplateRows={'1fr'}
-                gridTemplateColumns={'1fr 4fr 2fr'}
-                h="100vh"
-                gap="1"
+                gridTemplateColumns={'5fr 20fr 50fr 25fr'}
+                h="100%"
+                m={0}
+                p={0}
                 fontWeight="bold">
-                <GridItem p={3} bg="blackAlpha.700" area={'folderbar'}>
-                    <Box></Box>
+                <GridItem area={'folderbar'}>
+                    <FileTree />
                 </GridItem>
-                <GridItem p={3} bg="green.900" area={'editor'}>
-                    <Box />
+                <GridItem area={'editor'}>
+                    <MainEditor />
                 </GridItem>
-                <GridItem p={3} bg="pink.300" area={'suggestionbar'}>
+                <GridItem area={'suggestionbar'}>
                     <Box />
                 </GridItem>
             </Grid>

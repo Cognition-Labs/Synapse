@@ -6,9 +6,9 @@ const TitleBar = () => {
     const [appTitle, setAppTitle] = useRecoilState(appTitleAtom);
     return (
         <>
-            <Text fontSize="md" fontWeight="semibold" textAlign="center" py={2} m={0} style={{ "-webkit-app-region": "drag" }}>
+            <Text bgColor={"black"} fontSize="md" fontWeight="semibold" textAlign="center" pt={1} pb={2} m={0} style={{ "WebkitAppRegion": "drag" }}>
                 {appTitle}
-            </Text>
+            </Text >
         </>
     )
 }
