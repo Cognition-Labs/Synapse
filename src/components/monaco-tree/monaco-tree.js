@@ -24,15 +24,32 @@ class MonacoTree extends React.Component {
     document.removeEventListener("layout", this.onLayout);
   }
 
-  componentWillReceiveProps(props) {
-    if (this.state.directory !== props.directory) {
-      this.tree.model.setInput(props.directory);
-      this.setState({ directory: props.directory });
-    } else {
-      this.tree.model.refresh();
-      // expandTree(this.tree);
+  expandTree(tree) {
+    const model = tree.model;
+    const elements = [];
+
+    let item;
+    const nav = model.getNavigator();
+
+    while ((item = nav.next())) {
+      elements.push(item);
+    }
+
+    for (let i = 0, len = elements.length; i < len; i++) {
+      model.expand(elements[i]);
     }
   }
+
+  // componentWillReceiveProps(props) {
+  //   if (this.state.directory !== props.directory) {
+  //     // console.log(props.directory);
+  //     // this.tree.model.setInput(props.directory);
+  //     this.setState({ directory: props.directory });
+  //   } else {
+  //     this.tree.model.refresh();
+  //     this.expandTree(this.tree);
+  //   }
+  // }
 
   setContainer(container) {
     if (container == null) {
@@ -50,22 +67,6 @@ class MonacoTree extends React.Component {
 
     treeConfig.controller = createController(this, getActions, true);
     this.tree = new Tree(this.container, treeConfig);
-  }
-
-  expandTree(tree) {
-    const model = tree.model;
-    const elements = [];
-
-    let item;
-    const nav = model.getNavigator();
-
-    while ((item = nav.next())) {
-      elements.push(item);
-    }
-
-    for (let i = 0, len = elements.length; i < len; i++) {
-      model.expand(elements[i]);
-    }
   }
 
   onLayout() {

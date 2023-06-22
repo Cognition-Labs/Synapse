@@ -36,12 +36,7 @@
     height: 100%;
   }
   
-  .monaco-tree {
-    font-family: -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
-  }
-  
   .monaco-tree-row {
-    font-size: 14px;
     line-height: 24px;
   }
   

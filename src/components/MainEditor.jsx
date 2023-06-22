@@ -15,7 +15,7 @@ const MainEditor = () => {
             height="95vh"
             lineNumbers="off"
             language={"markdown"}
-            // loading={loadingScreen}
+            loading={<Box>Loading...</Box>}
             theme={monacoTheme}
             // onMount={handleEditorMount}
             value={value}

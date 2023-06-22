@@ -1,22 +1,21 @@
-import "../assets/main.css";
-import "../assets/vscode-icons.css";
+import "./main.css";
+import "./vscode-icons.css";
 import React from "react";
 import {
   MonacoTree,
   TreeDnD,
   generateDirectoryTree,
   FileTemplate,
-  directoryListing,
   Action,
   Separator,
-} from "./monaco-tree";
-
+} from "./index";
 const rootDirectoryName = "demo";
 
-export default class FileTree extends React.Component {
+export default class TreeUI extends React.Component {
   constructor(props) {
     super(props);
     this.rootDirectoryName = "demo";
+    this.dirListing = props.dirListing;
 
     this.state = {
       rootNode: null,
@@ -78,7 +77,7 @@ export default class FileTree extends React.Component {
     };
 
     this.setState({
-      rootNode: generateDirectoryTree(directoryListing, rootDirectoryName),
+      rootNode: generateDirectoryTree(this.dirListing, rootDirectoryName),
       treeConfig: treeConfig,
     });
   }
