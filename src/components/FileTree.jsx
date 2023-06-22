@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import TreeUI from "./monaco-tree/TreeUI";
 import { Tree } from "./monaco-tree";
 import { useRecoilValue } from "recoil";
@@ -16,7 +16,6 @@ const FileTree = () => {
                 <TreeUI dirListing={dirListing} />
             </Box>
         </VStack >
-
     </>
     )
 }

@@ -15,6 +15,16 @@ export const rootDirNameAtom = atom({
   default: "Synapse",
 });
 
+export const ZoteroAPIKeyAtom = atom({
+  key: "ZoteroAPIKeyAtom",
+  default: "o1xjmOyIb58F1Snlo8WntfEm",
+});
+
+export const ZoteroUserIDAtom = atom({
+  key: "ZoteroUserIDAtom",
+  default: "6692974",
+});
+
 export const directoryListingAtom = atom({
   key: "directoryListingAtom",
   default: [
