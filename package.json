@@ -1,0 +1,61 @@
+{
+  "name": "synapse",
+  "version": "0.1.0",
+  "private": true,
+  "main": "public/electron.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "start:electron": "concurrently --kill-others \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@monaco-editor/react": "^4.5.1",
+    "@remirror/pm": "^2.0.6",
+    "@remirror/react": "^2.0.29",
+    "@remirror/react-editors": "^1.0.34",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "framer-motion": "^10.12.16",
+    "monaco-editor": "^0.20.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.13.0",
+    "react-scripts": "5.0.1",
+    "recoil": "^0.7.7",
+    "remirror": "^2.0.32",
+    "web-vitals": "^2.1.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "latest",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^25.1.1",
+    "electron-is-dev": "^2.0.0",
+    "wait-on": "^7.0.1"
+  }
+}
