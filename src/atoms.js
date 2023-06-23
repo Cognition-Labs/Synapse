@@ -1,13 +1,8 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export const appTitleAtom = atom({
   key: "appTitleAtom",
   default: "Synapse > src > atoms.js",
-});
-
-export const editorStateAtom = atom({
-  key: "editorStateAtom",
-  default: "",
 });
 
 export const rootDirNameAtom = atom({
@@ -15,14 +10,73 @@ export const rootDirNameAtom = atom({
   default: "Synapse",
 });
 
-export const ZoteroAPIKeyAtom = atom({
-  key: "ZoteroAPIKeyAtom",
-  default: "o1xjmOyIb58F1Snlo8WntfEm",
+export const tabsAtom = atom({
+  key: "tabsAtom",
+  default: [
+    {
+      id: 0,
+      title: "atoms.js",
+      path: "src/atoms.js",
+      content: "atoms hello world",
+      active: true,
+    },
+    {
+      id: 1,
+      title: "license.txt",
+      path: "license.txt",
+      content: "this is license",
+      active: false,
+    },
+  ],
 });
 
-export const ZoteroUserIDAtom = atom({
-  key: "ZoteroUserIDAtom",
-  default: "6692974",
+export const activeTabSelector = selector({
+  key: "activeTabSelector",
+  get: ({ get }) => {
+    const tabs = get(tabsAtom);
+    if (tabs.length === 0) {
+      return null;
+    }
+    const activeTab = tabs.find((tab) => tab.active);
+    return activeTab;
+  },
+  set: ({ get, set }, newActiveTabID) => {
+    const tabs = get(tabsAtom);
+    if (tabs.length === 0) {
+      return;
+    }
+    const newTabs = tabs.map((tab) => {
+      if (tab.id === newActiveTabID) {
+        return { ...tab, active: true };
+      } else {
+        return { ...tab, active: false };
+      }
+    });
+    set(tabsAtom, newTabs);
+  },
+});
+
+export const editorStateSelector = selector({
+  key: "editorStateSelector",
+  get: ({ get }) => {
+    const activeTab = get(activeTabSelector);
+    return activeTab ? activeTab.content : "";
+  },
+  set: ({ get, set }, newContent) => {
+    const activeTab = get(activeTabSelector);
+    if (!activeTab) {
+      return;
+    }
+    const tabs = get(tabsAtom);
+    const newTabs = tabs.map((tab) => {
+      if (tab.id === activeTab.id) {
+        return { ...tab, content: newContent };
+      } else {
+        return tab;
+      }
+    });
+    set(tabsAtom, newTabs);
+  },
 });
 
 export const directoryListingAtom = atom({

@@ -1,18 +1,40 @@
+import { useRecoilState, useRecoilValue } from "recoil";
+import { tabsAtom, activeTabSelector } from "../atoms";
+import Tab from "./Tab";
 const { Flex, Box, Text } = require("@chakra-ui/react")
 
 
 const TabsBar = () => {
+    const [tabs, setTabs] = useRecoilState(tabsAtom)
+    const activeTab = useRecoilValue(activeTabSelector)
+
+    const handleNewTabClick = () => {
+        const newTab = {
+            id: tabs.length + 1,
+            title: `Untitled ${tabs.length + 1}`,
+            content: "",
+            active: true
+        }
+        const newTabs = tabs.map((tab) => {
+            return { ...tab, active: false }
+        })
+        newTabs.push(newTab)
+        setTabs(newTabs)
+        console.log(`new tab ${newTab.id}: ${newTab.title} created`);
+    }
+
     return (
         <Flex gap={0} bgColor={"#111"} fontSize={"md"} w="100%" h="100%" overflowX={"auto"} maxWidth={"50vw"} >
-            {/* mapp all tabs over below html */}
-            <Box as="button" bgColor={"#1e1e1e"} fontWeight={"light"} h="100%" px={4} pt={1} verticalAlign={"bottom"} width="fit-content" _hover={{ bgColor: "#2e2e2e" }} borderRight={"1px solid #888"}>
-                <Text as="u">changelog.txt</Text>
-            </Box>
-            <Box as="button" bgColor={"#151515"} fontWeight={"light"} h="100%" px={4} pt={1} verticalAlign={"bottom"} width="fit-content" _hover={{ bgColor: "#2e2e2e" }} borderRight={"1px solid #888"}>
-                changelog.txt
-            </Box>
-            <Box as="button" bgColor={"#151515"} fontWeight={"light"} h="100%" px={4} pt={1} verticalAlign={"bottom"} width="fit-content" _hover={{ bgColor: "#2e2e2e" }}>
-                changelog.txt
+            {tabs.map((tab) => {
+                return (
+                    <Tab id={tab.id} title={tab.title} active={activeTab.id === tab.id} />
+                )
+            }
+            )}
+
+            {/* add tab icon */}
+            <Box as="button" fontWeight={"light"} h="100%" px={4} pt={1} verticalAlign={"bottom"} width="fit-content" _hover={{ bgColor: "#2e2e2e" }} onClick={handleNewTabClick}>
+                <Text>+</Text>
             </Box>
         </Flex>
     )

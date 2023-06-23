@@ -1,13 +1,12 @@
+import React from 'react';
 import Editor from "@monaco-editor/react";
-import { Box, Textarea, useColorModeValue } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 import { useRecoilState } from 'recoil';
-import { editorStateAtom } from '../atoms';
-import 'react-quill/dist/quill.snow.css';
+import { editorStateSelector } from '../atoms';
 
 
 const MainEditor = () => {
-    const [value, setValue] = useRecoilState(editorStateAtom)
+    const [value, setValue] = useRecoilState(editorStateSelector)
     const monacoTheme = useColorModeValue("light", "vs-dark")
 
     return <>
