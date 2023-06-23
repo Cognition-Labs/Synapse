@@ -1,0 +1,6 @@
+Requirements
+
+- dirty_index folder
+- scripts folder
+- have index.js outside of scripts folder
+- configure paths
