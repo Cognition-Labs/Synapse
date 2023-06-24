@@ -33,17 +33,38 @@ const MainEditor = () => {
 
     // parse selectionState, update zoteroQuery based on current paragraph or user selection
     useEffect(() => {
-        if (selectionState.selectionText.length > 0) {
-            setZoteroQuery(selectionState.selectionText)
-            console.log(selectionState.selectionText)
+        let selectionText = selectionState.selectionText
+        if (selectionText.length > 0) {
+            setZoteroQuery(selectionText)
+            console.log(selectionText)
+            let lineSpan = selectionText.split('\n').length - 1
             return;
         }
 
         // 1. get cursor line number
         let cursorLine = selectionState.cursorPosition.line
 
-        // 2. split text into paragraphs, map line number to paragraph number
+        // 2. get text of cursor line
         let lines = value.split("\n")
+
+        // 3. going down, split lines into paragraphs
+        let currPar = ""
+        let currParLines = []
+        for (let i = 0; i < lines.length; i++) {
+            currPar += lines[i] + "\n"
+            currParLines.push(i + 1)
+            if (lines[i].length === 0) {
+                if (currParLines.includes(cursorLine)) {
+                    break;
+                } else {
+                    currPar = ""
+                    currParLines = []
+                    continue;
+                }
+            }
+        }
+        setZoteroQuery(currPar)
+        console.log(`curr paragraph: ${currPar}`)
 
     }, [selectionState, value, setZoteroQuery])
 
