@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, HStack, Tabs } from "@chakra-ui/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import MainEditor from "../components/MainEditor"
 import FileTree from "../components/FileTree"
 import TabsBar from "../components/TabsBar"
