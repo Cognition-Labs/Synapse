@@ -14,20 +14,23 @@ export const tabsAtom = atom({
   key: "tabsAtom",
   default: [
     {
-      id: 0,
       title: "atoms.js",
       path: "src/atoms.js",
       content: "atoms hello world",
       active: true,
     },
     {
-      id: 1,
       title: "license.txt",
       path: "license.txt",
       content: "this is license",
       active: false,
     },
   ],
+});
+
+export const zoteroQueryAtom = atom({
+  key: "zoteroQueryAtom",
+  default: "",
 });
 
 export const activeTabSelector = selector({
@@ -38,15 +41,16 @@ export const activeTabSelector = selector({
       return null;
     }
     const activeTab = tabs.find((tab) => tab.active);
-    return activeTab;
+    const activeTabID = tabs.findIndex((tab) => tab.active);
+    return { ...activeTab, id: activeTabID };
   },
   set: ({ get, set }, newActiveTabID) => {
     const tabs = get(tabsAtom);
     if (tabs.length === 0) {
       return;
     }
-    const newTabs = tabs.map((tab) => {
-      if (tab.id === newActiveTabID) {
+    const newTabs = tabs.map((tab, tabID) => {
+      if (tabID === newActiveTabID) {
         return { ...tab, active: true };
       } else {
         return { ...tab, active: false };
@@ -68,8 +72,8 @@ export const editorStateSelector = selector({
       return;
     }
     const tabs = get(tabsAtom);
-    const newTabs = tabs.map((tab) => {
-      if (tab.id === activeTab.id) {
+    const newTabs = tabs.map((tab, tabID) => {
+      if (tabID === activeTab.id) {
         return { ...tab, content: newContent };
       } else {
         return tab;
@@ -77,6 +81,11 @@ export const editorStateSelector = selector({
     });
     set(tabsAtom, newTabs);
   },
+});
+
+export const selectionStateAtom = atom({
+  key: "selectionStateAtom",
+  default: { selectionText: "", cursorPosition: { line: 1, column: 1 } },
 });
 
 export const directoryListingAtom = atom({

@@ -8,9 +8,10 @@ const Tab = ({ title, id, active }) => {
     const setTabs = useSetRecoilState(tabsAtom)
 
     const handleTabClick = () => {
+        console.log(`clicked tab ${id}: ${title}`);
         if (activeTab.id !== id) {
-            console.log(`selected tab ${activeTab.id}: ${activeTab.title}`);
             setActiveTab(id)
+            console.log(`switched to tab ${id}: ${title}`);
         }
     }
 
@@ -23,7 +24,7 @@ const Tab = ({ title, id, active }) => {
                 return oldTabs
             }
             console.log(`closing tab ${id}: ${title}`);
-            const newTabs = oldTabs.filter((tab) => tab.id !== id)
+            const newTabs = oldTabs.filter((tab, tabID) => tabID !== id)
             tabsAfterDelete = newTabs
             return newTabs
         })

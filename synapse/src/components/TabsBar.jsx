@@ -10,8 +10,7 @@ const TabsBar = () => {
 
     const handleNewTabClick = () => {
         const newTab = {
-            id: tabs.length + 1,
-            title: `Untitled ${tabs.length + 1}`,
+            title: `Untitled`,
             content: "",
             active: true
         }
@@ -25,9 +24,9 @@ const TabsBar = () => {
 
     return (
         <Flex gap={0} bgColor={"#111"} fontSize={"md"} w="100%" h="100%" overflowX={"auto"} maxWidth={"50vw"} >
-            {tabs.map((tab) => {
+            {tabs.map((tab, tabID) => {
                 return (
-                    <Tab id={tab.id} title={tab.title} active={activeTab.id === tab.id} />
+                    <Tab key={tabID} id={tabID} title={tab.title} active={activeTab.id === tabID} />
                 )
             }
             )}
