@@ -172,3 +172,5 @@ cython_debug/
 **/node_modules
 **/notes.md
 **/.env
+**/db
+**/dirty_index

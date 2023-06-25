@@ -1,10 +1,10 @@
 let { PythonShell } = require("python-shell");
 
 DB_PATH =
-  "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/server/node/db";
+  "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/db";
 
 PYTHON_PATH =
-  "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/server/node/scripts";
+  "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/scripts";
 
 let options = {
   mode: "text",
@@ -30,7 +30,7 @@ let query_options = {
   args: [DB_PATH, query, PYTHON_PATH],
 };
 
-PythonShell.run("query_to_sources.py", query_options).then((messages) => {
-  // results is an array consisting of messages collected during execution
-  console.log("messages: %j", messages);
-});
+// PythonShell.run("query_to_sources.py", query_options).then((messages) => {
+//   // results is an array consisting of messages collected during execution
+//   console.log("messages: %j", messages);
+// });

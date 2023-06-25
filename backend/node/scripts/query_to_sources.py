@@ -68,10 +68,10 @@ ZOTERO_PATH = get_zotero_path()
 # CURR_PATH = os.path.dirname(os.getcwd()) # Get out of the scripts folder
 CURR_PATH = os.path.join(os.getcwd(), "node")
 PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
-DOT_ENV_PATH = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/server/node/.env"
+DOT_ENV_PATH = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/.env"
 PYTHON_PATH = sys.argv[3]
 dotenv.load_dotenv(DOT_ENV_PATH)
-# os.environ["OPENAI_API_KEY"] = "put your own key"
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
 # We're assuming that update_index.py has already been run
 

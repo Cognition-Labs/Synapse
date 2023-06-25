@@ -2,7 +2,7 @@ import os
 import platform
 import sys
 import dotenv
-from langchain.vectorstores import Chroma
+from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.llms import OpenAI
@@ -63,13 +63,21 @@ def get_zotero_path():
   return zotero_path
 
 ZOTERO_PATH = get_zotero_path()
-# CURR_PATH = os.path.dirname(os.getcwd()) # Get out of the scripts folder
-CURR_PATH = os.path.join(os.getcwd(), "node")
+# CURR_PATH = os.path.dirname(CURR_DIR) # Get out of the scripts folder
+# cwd: /Users/danielgeorge/Documents/work/ml/hypolab/Synapse
+CURR_DIR = os.getcwd()
+if os.getcwd() != "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse":
+    print(f'cwd: {os.getcwd()}')
+    CURR_DIR =  "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse"
+    
+CURR_PATH = os.path.join(CURR_DIR,"backend", "node")
+DIRTY_INDEX_PATH = os.path.join(CURR_PATH, "dirty_index")
 PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
-DOT_ENV_PATH = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/server/node/.env"
-PYTHON_PATH = sys.argv[3]
+DOT_ENV_PATH = os.path.join(CURR_PATH, ".env")
 dotenv.load_dotenv(DOT_ENV_PATH)
-# os.environ["OPENAI_API_KEY"] = "put your own key"
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_API_ENV = os.environ.get('PINECONE_API_ENV') # You may need to switch with your env
 
 if ZOTERO_PATH is None:
     print("Invalid OS")
@@ -118,13 +126,13 @@ if len(pdf_paths) == 0 and len(snapshot_paths) == 0:
   
 # Check dirty_index at CURR_PATH/dirty_index/dirty_index.txt
 print("Checking dirty index")
-dirty_index_path = os.path.join(CURR_PATH, "dirty_index", "dirty_index.txt")
-print(dirty_index_path)
+
 dirty_index = set()
 # Check if the path is of a real file. If it is, add all lines to the dirty_index set
-if os.path.isfile(dirty_index_path):
+dirty_index_file_path = os.path.join(DIRTY_INDEX_PATH, "dirty_index.txt")
+if os.path.isdir(DIRTY_INDEX_PATH):
     # Read the file
-    with open(dirty_index_path, "r") as dirty_index_file:
+    with open(dirty_index_file_path, "r") as dirty_index_file:
         # Read all lines
         lines = dirty_index_file.readlines()
         # Add all lines to the dirty_index set
@@ -149,13 +157,14 @@ for pdf_path in pdf_paths:
     # Add the document to the list of documents
     documents += document
 
-print(f"Processing {len(snapshot_paths)} snapshots")
-for snapshot_path in snapshot_paths:
-    # Load the document
-    document = BSHTMLLoader(snapshot_path).load()
-    # Add the document to the list of documents
-    documents += document
-    break
+# TODO: Add the snapshots and do it with newspaper3k instead. Currently, it takes too long
+# print(f"Processing {len(snapshot_paths)} snapshots")
+# for snapshot_path in snapshot_paths:
+#     # Load the document
+#     document = BSHTMLLoader(snapshot_path).load()
+#     # Add the document to the list of documents
+#     documents += document
+#     break
 
 print("Splitting documents")
 # Splitting the text into chunks
@@ -163,32 +172,55 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20
 texts = text_splitter.split_documents(documents)
 
 # Check if the db exists by seeing if CURR_PATH/db is empty or does not exist
-db_path = os.path.join(CURR_PATH, "db")
-
 # Here we are using OpenAI embeddings but in future we will swap out to local embeddings
 embedding = OpenAIEmbeddings(disallowed_special=())
 
+# initialize pinecone
+# import pinecone
+# index_name = "synapse" # put in the name of your pinecone index here
+
+# pinecone.init(
+#     api_key=PINECONE_API_KEY,  # find at app.pinecone.io
+#     environment=PINECONE_API_ENV  # next to api key in console
+# )
+
+# if index_name not in pinecone.list_indexes():
+#     # we create a new index
+#     pinecone.create_index(
+#         name=index_name,
+#         metric='cosine',
+#         dimension=len(1536)  # 1536 dim of text-embedding-ada-002
+#     )
+
+# index = pinecone.Index(index_name)
+# pineconedb = Pinecone(index=index, embedding_function=embedding.embed_query ,text_key=PINECONE_API_KEY)
+
 # Check if the path is of a real directory
-if not os.path.isdir(db_path):
+if not os.path.isdir(PERSIST_DIR):
     # Create the directory
-    os.mkdir(db_path)
+    os.mkdir(PERSIST_DIR)
     print("Creating database")
     # Create the database
     vectordb = Chroma.from_documents(documents=texts,
                                  embedding=embedding,
                                  persist_directory=PERSIST_DIR)
-
+    # Add the documents to pinecone
+    print("Adding documents to pinecone")
+    # pineconedb.add_documents(documents=texts)
 else:
     # Load the database
     vectordb = Chroma(persist_directory=PERSIST_DIR, embedding_function=embedding)
     vectordb.add_documents(texts)
+    # pineconedb.add_documents(documents=texts)
 
 # Check if dirty_index.txt exists
 print("Updating dirty index")
-if not os.path.isfile(dirty_index_path):
+if not os.path.isdir(DIRTY_INDEX_PATH):
+    # Make directory at DIRTY_INDEX_PATH
+    os.mkdir(DIRTY_INDEX_PATH)
     # Create the file
     # Make a file at CURR_PATH/dirty_index/dirty_index.txt
-    with open(dirty_index_path, "w") as dirty_index_file:
+    with open(dirty_index_file_path, "w") as dirty_index_file:
         # Write all paths to the file with a newline
         for pdf_path in pdf_paths:
             dirty_index_file.write(pdf_path + "\n")
@@ -197,10 +229,9 @@ if not os.path.isfile(dirty_index_path):
 # Add new paths to the dirty_index
 else:
     # Append to the file
-    with open(dirty_index_path, "a") as dirty_index_file:
+    with open(dirty_index_file_path, "a") as dirty_index_file:
         # Write all paths to the file with a newline
         for pdf_path in pdf_paths:
             dirty_index_file.write(pdf_path + "\n")
         for snapshot_path in snapshot_paths:
             dirty_index_file.write(snapshot_path + "\n")
-
