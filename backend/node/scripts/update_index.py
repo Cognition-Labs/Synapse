@@ -72,7 +72,8 @@ if os.getcwd() != "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse":
     
 CURR_PATH = os.path.join(CURR_DIR,"backend", "node")
 DIRTY_INDEX_PATH = os.path.join(CURR_PATH, "dirty_index")
-PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
+# PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
+PERSIST_DIR = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/db"
 DOT_ENV_PATH = os.path.join(CURR_PATH, ".env")
 dotenv.load_dotenv(DOT_ENV_PATH)
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')

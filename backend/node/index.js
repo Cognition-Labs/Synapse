@@ -30,7 +30,7 @@ let query_options = {
   args: [DB_PATH, query, PYTHON_PATH],
 };
 
-// PythonShell.run("query_to_sources.py", query_options).then((messages) => {
-//   // results is an array consisting of messages collected during execution
-//   console.log("messages: %j", messages);
-// });
+PythonShell.run("query_to_sources.py", query_options).then((messages) => {
+  // results is an array consisting of messages collected during execution
+  console.log("messages: %j", messages);
+});

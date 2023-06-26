@@ -10,6 +10,7 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false, // this is the important bit
     },
   });
 
@@ -43,4 +44,13 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+// Custom code
+const { ipcMain } = require("electron-better-ipc");
+
+ipcMain.answerRenderer("zoteroQuery", async (zoteroQuery, browserWindow) => {
+  // Perform operation on the query. Here, I'm removing all spaces.
+  const modifiedQuery = zoteroQuery.replace(/\s+/g, "");
+  return modifiedQuery;
 });

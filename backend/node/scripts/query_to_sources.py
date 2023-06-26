@@ -67,7 +67,8 @@ def get_zotero_path():
 ZOTERO_PATH = get_zotero_path()
 # CURR_PATH = os.path.dirname(os.getcwd()) # Get out of the scripts folder
 CURR_PATH = os.path.join(os.getcwd(), "node")
-PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
+# PERSIST_DIR = os.path.join(CURR_PATH, "db") # Supplying a persist_directory will store the embeddings on disk
+PERSIST_DIR = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/db"
 DOT_ENV_PATH = "/Users/danielgeorge/Documents/work/ml/hypolab/Synapse/backend/node/.env"
 PYTHON_PATH = sys.argv[3]
 dotenv.load_dotenv(DOT_ENV_PATH)
