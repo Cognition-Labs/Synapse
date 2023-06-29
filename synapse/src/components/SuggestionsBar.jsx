@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { zoteroQueryAtom } from "../atoms";
+const { ipcRenderer } = window.require('electron');
 
 function SuggestionsBar() {
   const zoteroQuery = useRecoilValue(zoteroQueryAtom);
@@ -13,9 +14,11 @@ function SuggestionsBar() {
     async function fetchModifiedQuery() {
       setIsFetching(true);
       console.log("Fetching modified query");
-      const response = await fetch(
-        `http://localhost:1200/query?q=${encodeURIComponent(zoteroQuery)}`
-      );
+      ipcRenderer.send("query-channel", { "data": zoteroQuery });
+    }
+
+    ipcRenderer.on("query-channel", async (event, response) => {
+      console.log("Received response from server", response);
       if (!response.ok) {
         console.error("Failed to fetch modified query", response);
         setIsFetching(false);
@@ -34,7 +37,7 @@ function SuggestionsBar() {
       }
       setModifiedQuery(parsed);
       setIsFetching(false);
-    }
+    });
 
     const fetchTimeout = setTimeout(fetchModifiedQuery, 3000); // Waits 3 second before fetching
     return () => clearTimeout(fetchTimeout); // Clears the timeout if the component unmounts

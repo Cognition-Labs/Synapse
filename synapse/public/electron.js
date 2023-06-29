@@ -1,6 +1,5 @@
 const path = require("path");
-
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 
 function createWindow() {
@@ -46,11 +45,13 @@ app.on("activate", () => {
   }
 });
 
-// Custom code
-const { ipcMain } = require("electron-better-ipc");
-
-ipcMain.answerRenderer("zoteroQuery", async (zoteroQuery, browserWindow) => {
-  // Perform operation on the query. Here, I'm removing all spaces.
-  const modifiedQuery = zoteroQuery.replace(/\s+/g, "");
-  return modifiedQuery;
+// End of the file
+ipcMain.on("query-channel", (event, queryParagraph) => {
+  const query = queryParagraph["data"];
+  console.log("got query from frontend:", query);
+  const response = {
+    data: "This is a response object from server w/ documents and the data",
+    ok: true,
+  };
+  event.sender.send("query-channel", response);
 });

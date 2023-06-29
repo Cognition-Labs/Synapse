@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box, Textarea, useColorModeValue } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import {
   editorStateSelector,
@@ -81,15 +81,10 @@ const MainEditor = () => {
 
   return (
     <>
-      <Editor
+      <Textarea
         height="95vh"
-        lineNumbers="off"
-        language={"markdown"}
-        loading={<Box>Loading...</Box>}
-        theme={monacoTheme}
-        onMount={handleEditorMount}
         value={value}
-        onChange={handleEditorChange}
+        onChange={(e) => setValue(e.target.value)}
       />
     </>
   );
