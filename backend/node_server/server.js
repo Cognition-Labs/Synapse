@@ -44,7 +44,7 @@ app.get("/query", (req, res) => {
       // results is an array consisting of messages collected during execution
       console.log("messages: %j", messages);
       console.log("Response headers: ", res.getHeaders()); // Add this line
-      res.send(messages);
+      res.send(messages[0]);
     })
     .catch((err) => {
       console.log(err);

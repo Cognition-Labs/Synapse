@@ -145,7 +145,8 @@ pdf_paths = set(pdf_paths) - dirty_index
 snapshot_paths = set(snapshot_paths) - dirty_index
 
 # Check if there are no PDFs and no snapshots
-if len(pdf_paths) == 0 and len(snapshot_paths) == 0:
+# TODO: update because we are not using snapshots rn
+if len(pdf_paths) == 0:# and len(snapshot_paths) == 0:
     print("Index unchanged")
     exit(0)
 
@@ -176,26 +177,6 @@ texts = text_splitter.split_documents(documents)
 # Here we are using OpenAI embeddings but in future we will swap out to local embeddings
 embedding = OpenAIEmbeddings(disallowed_special=())
 
-# initialize pinecone
-# import pinecone
-# index_name = "synapse" # put in the name of your pinecone index here
-
-# pinecone.init(
-#     api_key=PINECONE_API_KEY,  # find at app.pinecone.io
-#     environment=PINECONE_API_ENV  # next to api key in console
-# )
-
-# if index_name not in pinecone.list_indexes():
-#     # we create a new index
-#     pinecone.create_index(
-#         name=index_name,
-#         metric='cosine',
-#         dimension=len(1536)  # 1536 dim of text-embedding-ada-002
-#     )
-
-# index = pinecone.Index(index_name)
-# pineconedb = Pinecone(index=index, embedding_function=embedding.embed_query ,text_key=PINECONE_API_KEY)
-
 # Check if the path is of a real directory
 if not os.path.isdir(PERSIST_DIR):
     # Create the directory
@@ -207,12 +188,10 @@ if not os.path.isdir(PERSIST_DIR):
                                  persist_directory=PERSIST_DIR)
     # Add the documents to pinecone
     print("Adding documents to pinecone")
-    # pineconedb.add_documents(documents=texts)
 else:
     # Load the database
     vectordb = Chroma(persist_directory=PERSIST_DIR, embedding_function=embedding)
     vectordb.add_documents(texts)
-    # pineconedb.add_documents(documents=texts)
 
 # Check if dirty_index.txt exists
 print("Updating dirty index")

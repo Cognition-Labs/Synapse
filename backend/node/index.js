@@ -20,17 +20,17 @@ PythonShell.run("update_index.py", options).then((messages) => {
   console.log("messages: %j", messages);
 });
 
-query = "How can I use AAV to edit the genome of a cell?";
+// query = "How can I use AAV to edit the genome of a cell?";
 
-let query_options = {
-  mode: "text",
-  pythonPath: "/Users/danielgeorge/miniforge3/envs/synapse/bin/python3",
-  pythonOptions: ["-u"], // get print results in real-time
-  scriptPath: PYTHON_PATH,
-  args: [DB_PATH, query, PYTHON_PATH],
-};
+// let query_options = {
+//   mode: "text",
+//   pythonPath: "/Users/danielgeorge/miniforge3/envs/synapse/bin/python3",
+//   pythonOptions: ["-u"], // get print results in real-time
+//   scriptPath: PYTHON_PATH,
+//   args: [DB_PATH, query, PYTHON_PATH],
+// };
 
-PythonShell.run("query_to_sources.py", query_options).then((messages) => {
-  // results is an array consisting of messages collected during execution
-  console.log("messages: %j", messages);
-});
+// PythonShell.run("query_to_sources.py", query_options).then((messages) => {
+//   // results is an array consisting of messages collected during execution
+//   console.log("messages: %j", messages);
+// });

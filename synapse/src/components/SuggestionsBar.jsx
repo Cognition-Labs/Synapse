@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { zoteroQueryAtom } from "../atoms";
-import { useEffect, useState } from "react";
 
 function SuggestionsBar() {
   const zoteroQuery = useRecoilValue(zoteroQueryAtom);
-  const [modifiedQuery, setModifiedQuery] = useState("");
+  const [modifiedQuery, setModifiedQuery] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
@@ -25,18 +24,41 @@ function SuggestionsBar() {
 
       const text = await response.text();
       console.log("text", text);
-      const parsed = JSON.parse(text);
-      console.log("parsed", parsed);
-      // setModifiedQuery(parsed.result.source_documents);
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (error) {
+        console.error(`Invalid JSON: ${error.message}`);
+        setIsFetching(false);
+        return;
+      }
       setModifiedQuery(parsed);
       setIsFetching(false);
     }
 
-    const fetchTimeout = setTimeout(fetchModifiedQuery, 3000); // Waits 6 second before fetching
+    const fetchTimeout = setTimeout(fetchModifiedQuery, 3000); // Waits 3 second before fetching
     return () => clearTimeout(fetchTimeout); // Clears the timeout if the component unmounts
   }, [zoteroQuery, isFetching]);
 
-  return <div>{modifiedQuery}</div>;
+  return (
+    <div>
+      {modifiedQuery ? (
+        <>
+          <div>{modifiedQuery.query}</div>
+          <div>{modifiedQuery.result}</div>
+          {modifiedQuery.source_documents.map((doc, index) => (
+            <div key={index}>
+              <div>{doc.page_content}</div>
+              <div>Source: {doc.metadata.source}</div>
+              <div>Page: {doc.metadata.page}</div>
+            </div>
+          ))}
+        </>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </div>
+  );
 }
 
 export default SuggestionsBar;
