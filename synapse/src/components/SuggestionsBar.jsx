@@ -43,8 +43,8 @@ function SuggestionsBar() {
     setIsFetching(true);
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
-      zoteroQuery +
-      "&db_name=daniel",
+        zoteroQuery +
+        "&db_name=daniel",
       { method: "GET" }
     );
     if (!response.ok) {
@@ -70,7 +70,7 @@ function SuggestionsBar() {
     }
     console.log("fetching");
     fetchModifiedQuery();
-  }
+  };
 
   const handleToggle = (index) => {
     setShowSource((prev) => ({ ...prev, [index]: !prev[index] }));
