@@ -9,38 +9,42 @@ function SuggestionsBar() {
   const [isFetching, setIsFetching] = useState(false);
   const [showSource, setShowSource] = useState({});
 
-  useEffect(() => {
-    if (isFetching) return;
-    async function fetchModifiedQuery() {
-      if (!zoteroQuery || zoteroQuery.trim() === "") {
-        setIsFetching(false);
-        return;
-      }
-      setIsFetching(true);
-      const response = await fetch(
-        `https://degtrdg--synapse-run-query.modal.run/?query=` +
-          zoteroQuery +
-          "&db_name=daniel",
-        { method: "GET" }
-      );
-      if (!response.ok) {
-        setIsFetching(false);
-        return;
-      }
-      const text = await response.text();
-      let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch (error) {
-        setIsFetching(false);
-        return;
-      }
-      setDocuments(parsed);
+  async function fetchModifiedQuery() {
+    if (!zoteroQuery || zoteroQuery.trim() === "") {
       setIsFetching(false);
+      return;
     }
-    const fetchTimeout = setTimeout(fetchModifiedQuery, 3000);
-    return () => clearTimeout(fetchTimeout);
-  }, [zoteroQuery, isFetching]);
+    setIsFetching(true);
+    const response = await fetch(
+      `https://degtrdg--synapse-run-query.modal.run/?query=` +
+      zoteroQuery +
+      "&db_name=daniel",
+      { method: "GET" }
+    );
+    if (!response.ok) {
+      setIsFetching(false);
+      return;
+    }
+    const text = await response.text();
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (error) {
+      setIsFetching(false);
+      return;
+    }
+    setDocuments(parsed);
+    setIsFetching(false);
+  }
+
+  const handleButtonClick = () => {
+    if (isFetching) {
+      console.log("already fetching");
+      return;
+    }
+    console.log("fetching");
+    fetchModifiedQuery();
+  }
 
   const handleToggle = (index) => {
     setShowSource((prev) => ({ ...prev, [index]: !prev[index] }));
@@ -57,6 +61,7 @@ function SuggestionsBar() {
       border="1px"
       borderColor="gray.200"
     >
+      <Button onClick={handleButtonClick}>Get Insights!</Button>
       {documents.length > 0 ? (
         documents.map((doc, index) => (
           <Box key={index} w="100%">
