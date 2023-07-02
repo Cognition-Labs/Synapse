@@ -4,7 +4,7 @@ import { zoteroQueryAtom } from "../atoms";
 
 function SuggestionsBar() {
   const zoteroQuery = useRecoilValue(zoteroQueryAtom);
-  const [modifiedQuery, setModifiedQuery] = useState(null);
+  const [documents, setDocuments] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
@@ -14,10 +14,14 @@ function SuggestionsBar() {
       setIsFetching(true);
       console.log("Fetching modified query");
 
-      const response = await fetch(`https://degtrdg--synapse-run-query-dev.modal.run/?query=` + zoteroQuery + "&db_name=daniel", {
-        method: "GET",
-      });
-
+      const response = await fetch(
+        `https://degtrdg--synapse-run-query.modal.run/?query=` +
+          zoteroQuery +
+          "&db_name=daniel",
+        {
+          method: "GET",
+        }
+      );
 
       console.log("Received response from server", response);
       if (!response.ok) {
@@ -36,9 +40,8 @@ function SuggestionsBar() {
         setIsFetching(false);
         return;
       }
-      setModifiedQuery(parsed);
+      setDocuments(parsed);
       setIsFetching(false);
-
     }
     const fetchTimeout = setTimeout(fetchModifiedQuery, 3000); // Waits 3 second before fetching
     return () => clearTimeout(fetchTimeout); // Clears the timeout if the component unmounts
@@ -46,18 +49,14 @@ function SuggestionsBar() {
 
   return (
     <div>
-      {modifiedQuery ? (
-        <>
-          <div>{modifiedQuery.query}</div>
-          <div>{modifiedQuery.result}</div>
-          {modifiedQuery.source_documents.map((doc, index) => (
-            <div key={index}>
-              <div>{doc.page_content}</div>
-              <div>Source: {doc.metadata.source}</div>
-              <div>Page: {doc.metadata.page}</div>
-            </div>
-          ))}
-        </>
+      {documents.length > 0 ? (
+        documents.map((doc, index) => (
+          <div key={index}>
+            <div>{doc.page_content}</div>
+            <div>Source: {doc.metadata.source}</div>
+            <div>Page: {doc.metadata.page}</div>
+          </div>
+        ))
       ) : (
         <div>Loading...</div>
       )}
