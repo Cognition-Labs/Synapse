@@ -4,7 +4,7 @@ import dotenv
 import modal
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain import PromptTemplate, LLMChain
 import openai
 
@@ -47,7 +47,7 @@ def create_prompt_template():
 
 def create_llm_chain(prompt):
     # llm = OpenAI(model='gpt-3.5-turbo')
-    llm = OpenAI()
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo")
     return LLMChain(prompt=prompt, llm=llm)
 
 def process_documents(docs, llm_chain, query):
