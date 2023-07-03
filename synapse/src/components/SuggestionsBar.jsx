@@ -95,12 +95,13 @@ function SuggestionsBar() {
       <HStack>
         <Button onClick={handleButtonClick}>Get Insights!</Button>
         <Menu>
-          <MenuButton as={Button}>
+          <Text>Querying as {activePerson}</Text>
+          {/* <MenuButton as={Button}>
             Change person ↓
           </MenuButton>
           <MenuList>
             <MenuItem onClick={() => { setActivePerson("shahar") }}>shahar</MenuItem>
-          </MenuList>
+          </MenuList> */}
         </Menu>
       </HStack>
       <Flex height="20px" width="100%" justifyContent="space-between">

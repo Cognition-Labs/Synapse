@@ -4,18 +4,28 @@ import FileTree from "../components/FileTree";
 import TabsBar from "../components/TabsBar";
 import SuggestionsBar from "../components/SuggestionsBar";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { activePersonAtom } from "../atoms";
 
 const Home = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
+  const [activePerson, setActivePerson] = useRecoilState(activePersonAtom);
+  const passwords = {
+    "animalcule": "shahar"
+  }
+
 
   return (
     !loggedIn ? <>
       <Box m={5}>
-        <Text>Enter password to access the demo</Text>
+        <Text>Enter your password to access the demo using your Zotero</Text>
         <Input type="text" value={password} onChange={(e) => { setPassword(e.target.value) }} />
         <Button onClick={(e) => {
-          if (password === "palantir") setLoggedIn(true);
+          if (password in passwords) {
+            setActivePerson(passwords[password]);
+            setLoggedIn(true);
+          }
         }}>Submit</Button>
       </Box>
     </> :
