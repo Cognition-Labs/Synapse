@@ -76,7 +76,7 @@ function SuggestionsBar() {
     }
     console.log("fetching");
     fetchModifiedQuery();
-  }
+  };
 
   const handleToggle = (index) => {
     setShowSource((prev) => ({ ...prev, [index]: !prev[index] }));
