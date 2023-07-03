@@ -58,7 +58,7 @@ Only give the resultant patchwork and no extra explanations. Let your work speak
 
 def create_llm_chain(prompt):
     # llm = OpenAI(model='gpt-3.5-turbo')
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1, max_tokens=256, model_kwargs={'presence_penalty': 0.4})
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1, max_tokens=100, model_kwargs={'presence_penalty': 0.4})
     return LLMChain(prompt=prompt, llm=llm)
 
 def process_documents(docs, llm_chain, query):

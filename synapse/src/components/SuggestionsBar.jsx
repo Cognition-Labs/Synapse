@@ -44,7 +44,7 @@ function SuggestionsBar() {
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
         zoteroQuery +
-        "&db_name=daniel",
+        "&db_name=shahar",
       { method: "GET" }
     );
     if (!response.ok) {
