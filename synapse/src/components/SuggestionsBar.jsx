@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { zoteroQueryAtom } from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { zoteroQueryAtom, activePersonAtom } from "../atoms";
 import {
   Box,
   Button,
@@ -11,6 +11,11 @@ import {
   Spinner,
   Tooltip,
   Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  HStack,
 } from "@chakra-ui/react";
 
 function SuggestionsBar() {
@@ -20,6 +25,7 @@ function SuggestionsBar() {
   const [showSource, setShowSource] = useState({});
   const [requestTimestamp, setRequestTimestamp] = useState(null);
   const [requestTimeElapsed, setRequestTimeElapsed] = useState(null);
+  const [activePerson, setActivePerson] = useRecoilState(activePersonAtom);
 
   useEffect(() => {
     if (isFetching) {
@@ -44,7 +50,7 @@ function SuggestionsBar() {
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
       zoteroQuery +
-      "&db_name=daniel",
+      "&db_name=" + activePerson,
       { method: "GET" }
     );
     if (!response.ok) {
@@ -86,7 +92,17 @@ function SuggestionsBar() {
       border="1px"
       borderColor="gray.200"
     >
-      <Button onClick={handleButtonClick}>Get Insights!</Button>
+      <HStack>
+        <Button onClick={handleButtonClick}>Get Insights!</Button>
+        <Menu>
+          <MenuButton as={Button}>
+            Change person ↓
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={() => { setActivePerson("shahar") }}>shahar</MenuItem>
+          </MenuList>
+        </Menu>
+      </HStack>
       <Flex height="20px" width="100%" justifyContent="space-between">
         <Text fontSize="xs" color="gray.600">
           {isFetching
@@ -103,28 +119,30 @@ function SuggestionsBar() {
           </Tooltip>
         )}
       </Flex>
-      {documents.length > 0 ? (
-        documents.map((doc, index) => (
-          <Box key={index} w="100%">
-            <Text>{doc.page_content}</Text>
-            <Button size="sm" onClick={() => handleToggle(index)} mt={2}>
-              {showSource[index] ? "Hide Source" : "Show Source"}
-            </Button>
-            <Collapse in={showSource[index]}>
+      {
+        documents.length > 0 ? (
+          documents.map((doc, index) => (
+            <Box key={index} w="100%">
+              <Text>{doc.page_content}</Text>
+              <Button size="sm" onClick={() => handleToggle(index)} mt={2}>
+                {showSource[index] ? "Hide Source" : "Show Source"}
+              </Button>
+              <Collapse in={showSource[index]}>
+                <Text fontSize="sm" color="gray.600" mt={2}>
+                  {doc.metadata.source}
+                </Text>
+              </Collapse>
               <Text fontSize="sm" color="gray.600" mt={2}>
-                {doc.metadata.source}
+                Page: {doc.metadata.page}
               </Text>
-            </Collapse>
-            <Text fontSize="sm" color="gray.600" mt={2}>
-              Page: {doc.metadata.page}
-            </Text>
-            <Divider mt={4} />
-          </Box>
-        ))
-      ) : (
-        <Box>Loading...</Box>
-      )}
-    </VStack>
+              <Divider mt={4} />
+            </Box>
+          ))
+        ) : (
+          <Box>Loading...</Box>
+        )
+      }
+    </VStack >
   );
 }
 

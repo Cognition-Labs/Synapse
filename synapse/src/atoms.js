@@ -1,5 +1,10 @@
 import { atom, selector } from "recoil";
 
+export const activePersonAtom = atom({
+  key: "activePersonAtom",
+  default: "",
+});
+
 export const appTitleAtom = atom({
   key: "appTitleAtom",
   default: "Synapse > src > atoms.js",
