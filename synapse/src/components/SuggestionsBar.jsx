@@ -16,6 +16,7 @@ import {
   MenuList,
   MenuItem,
   HStack,
+  Input,
 } from "@chakra-ui/react";
 
 function SuggestionsBar() {
@@ -93,17 +94,11 @@ function SuggestionsBar() {
       borderColor="gray.200"
     >
       <HStack>
-        <Button onClick={handleButtonClick}>Get Insights!</Button>
-        <Menu>
-          <Text>Querying as {activePerson}</Text>
-          {/* <MenuButton as={Button}>
-            Change person ↓
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={() => { setActivePerson("shahar") }}>shahar</MenuItem>
-          </MenuList> */}
-        </Menu>
+        <Text fontSize={"small"}>Querying as:</Text>
+        <Input value={activePerson} onChange={e => { setActivePerson(e.target.value) }}></Input>
       </HStack>
+      <Button onClick={handleButtonClick}>Get Insights!</Button>
+
       <Flex height="20px" width="100%" justifyContent="space-between">
         <Text fontSize="xs" color="gray.600">
           {isFetching
