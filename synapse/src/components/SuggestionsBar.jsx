@@ -95,7 +95,12 @@ function SuggestionsBar() {
     >
       <HStack>
         <Text fontSize={"small"}>Querying as:</Text>
-        <Input value={activePerson} onChange={e => { setActivePerson(e.target.value) }}></Input>
+        <Input value={activePerson} onChange={e => {
+          setActivePerson(e.target.value)
+          if (e.target.value === "") {
+            setActivePerson("animalcule")
+          }
+        }}></Input>
       </HStack>
       <Button onClick={handleButtonClick}>Get Insights!</Button>
 
