@@ -48,10 +48,17 @@ function SuggestionsBar() {
       return;
     }
     setIsFetching(true);
+    console.log(
+      `https://degtrdg--synapse-run-query.modal.run/?query=` +
+        zoteroQuery +
+        "&db_name=" +
+        (activePerson === "" ? "animalcule" : activePerson)
+    );
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
-      zoteroQuery +
-      "&db_name=" + activePerson,
+        zoteroQuery +
+        "&db_name=" +
+        (activePerson === "" ? "animalcule" : activePerson),
       { method: "GET" }
     );
     if (!response.ok) {
@@ -95,12 +102,12 @@ function SuggestionsBar() {
     >
       <HStack>
         <Text fontSize={"small"}>Querying as:</Text>
-        <Input value={activePerson} onChange={e => {
-          setActivePerson(e.target.value)
-          if (e.target.value === "") {
-            setActivePerson("animalcule")
-          }
-        }}></Input>
+        <Input
+          value={activePerson}
+          onChange={(e) => {
+            setActivePerson(e.target.value);
+          }}
+        ></Input>
       </HStack>
       <Button onClick={handleButtonClick}>Get Insights!</Button>
 
@@ -120,30 +127,28 @@ function SuggestionsBar() {
           </Tooltip>
         )}
       </Flex>
-      {
-        documents.length > 0 ? (
-          documents.map((doc, index) => (
-            <Box key={index} w="100%">
-              <Text>{doc.page_content}</Text>
-              <Button size="sm" onClick={() => handleToggle(index)} mt={2}>
-                {showSource[index] ? "Hide Source" : "Show Source"}
-              </Button>
-              <Collapse in={showSource[index]}>
-                <Text fontSize="sm" color="gray.600" mt={2}>
-                  {doc.metadata.source}
-                </Text>
-              </Collapse>
+      {documents.length > 0 ? (
+        documents.map((doc, index) => (
+          <Box key={index} w="100%">
+            <Text>{doc.page_content}</Text>
+            <Button size="sm" onClick={() => handleToggle(index)} mt={2}>
+              {showSource[index] ? "Hide Source" : "Show Source"}
+            </Button>
+            <Collapse in={showSource[index]}>
               <Text fontSize="sm" color="gray.600" mt={2}>
-                Page: {doc.metadata.page}
+                {doc.metadata.source}
               </Text>
-              <Divider mt={4} />
-            </Box>
-          ))
-        ) : (
-          <Box>Loading...</Box>
-        )
-      }
-    </VStack >
+            </Collapse>
+            <Text fontSize="sm" color="gray.600" mt={2}>
+              Page: {doc.metadata.page}
+            </Text>
+            <Divider mt={4} />
+          </Box>
+        ))
+      ) : (
+        <Box>Loading...</Box>
+      )}
+    </VStack>
   );
 }
 
