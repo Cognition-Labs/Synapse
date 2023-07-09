@@ -50,8 +50,8 @@ function SuggestionsBar() {
     setIsFetching(true);
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
-      zoteroQuery +
-      "&db_name=" + activePerson,
+        zoteroQuery +
+        "&db_name=" + activePerson === "" ? "animalcule" : activePerson,
       { method: "GET" }
     );
     if (!response.ok) {
@@ -97,9 +97,6 @@ function SuggestionsBar() {
         <Text fontSize={"small"}>Querying as:</Text>
         <Input value={activePerson} onChange={e => {
           setActivePerson(e.target.value)
-          if (e.target.value === "") {
-            setActivePerson("animalcule")
-          }
         }}></Input>
       </HStack>
       <Button onClick={handleButtonClick}>Get Insights!</Button>
