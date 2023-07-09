@@ -48,17 +48,12 @@ function SuggestionsBar() {
       return;
     }
     setIsFetching(true);
-    console.log(
-      `https://degtrdg--synapse-run-query.modal.run/?query=` +
-        zoteroQuery +
-        "&db_name=" +
-        (activePerson === "" ? "animalcule" : activePerson)
-    );
+    let personsubmitted = activePerson === "" ? "animalcule" : activePerson;
     const response = await fetch(
       `https://degtrdg--synapse-run-query.modal.run/?query=` +
         zoteroQuery +
         "&db_name=" +
-        (activePerson === "" ? "animalcule" : activePerson),
+        personsubmitted,
       { method: "GET" }
     );
     if (!response.ok) {
